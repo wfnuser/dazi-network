@@ -1,0 +1,32 @@
+from pydantic_settings import BaseSettings
+
+
+class Settings(BaseSettings):
+    # Database
+    database_url: str = "postgresql://postgres:postgres@localhost:5432/dazi"
+
+    # MiniMax LLM
+    minimax_api_key: str = ""
+    minimax_group_id: str = ""
+    minimax_model: str = "MiniMax-Text-01"
+    minimax_base_url: str = "https://api.minimax.chat/v1"
+
+    # Embedding
+    embedding_provider: str = "minimax"  # "minimax" or "openai"
+    openai_api_key: str = ""
+    embedding_model: str = "embo-01"  # MiniMax embedding model
+    embedding_dim: int = 1536
+
+    # Crypto
+    contact_encryption_key: str = ""  # 32-byte hex key for AES-256
+
+    # Rate limiting
+    rate_limit_backend: str = "memory"  # "memory" or "db"
+
+    # Auth
+    auth_timestamp_tolerance_seconds: int = 300  # 5 minutes
+
+    model_config = {"env_prefix": "DAZI_", "env_file": ".env"}
+
+
+settings = Settings()
