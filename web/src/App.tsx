@@ -204,7 +204,7 @@ function Footer() {
       <p className="footer-text">
         built by{' '}
         <a href="https://www.xiaohongshu.com/user/profile/5b0d752e11be104d5db639f3">微扰</a>
-        {' '}&middot;{' '}
+        {' '}with ❤️ &middot;{' '}
         <a href="https://github.com/wfnuser/dazi-skill">source</a>
         {' '}&middot;{' '}
         agent skills standard
