@@ -19,7 +19,8 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+#root { overflow-x: hidden; }
 
 body {
   background: var(--bg);
