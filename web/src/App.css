@@ -343,14 +343,15 @@
   padding: 1rem 1.5rem;
   border-radius: var(--radius-sm);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
   border: 1px solid #ffffff08;
   word-break: break-all;
   overflow-wrap: anywhere;
+  text-align: left;
 }
 
 .install-cmd:hover {
@@ -361,7 +362,7 @@
   font-size: 0.7rem;
   color: var(--text-dim);
   transition: color 0.3s;
-  flex-shrink: 0;
+  text-align: right;
 }
 
 .install-cmd:hover .copy-hint {
