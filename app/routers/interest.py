@@ -106,6 +106,29 @@ async def express_interest(
                 message=f"Declined interest from '{body.target_nickname}'.",
             )
 
+        # === WITHDRAW ===
+        if body.action == "withdraw":
+            # Find my outgoing interest to target
+            outgoing = await conn.fetchrow(
+                "SELECT id, status FROM interests WHERE from_did = $1 AND to_did = $2 AND status = 'pending'",
+                did, target_did,
+            )
+            if not outgoing:
+                raise HTTPException(
+                    status_code=404,
+                    detail={
+                        "error": "not_found",
+                        "message": f"No pending interest to '{body.target_nickname}' to withdraw",
+                    },
+                )
+            await conn.execute("DELETE FROM interests WHERE id = $1", outgoing["id"])
+            _set_rate_headers(response, did)
+            return InterestResponse(
+                status="declined",
+                contact=None,
+                message=f"Withdrew interest in '{body.target_nickname}'.",
+            )
+
         # === ACCEPT (default) ===
         # Check for duplicate outgoing
         existing = await conn.fetchrow(

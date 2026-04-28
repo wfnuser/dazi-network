@@ -55,7 +55,7 @@ class SearchResponse(BaseModel):
 
 class InterestRequest(BaseModel):
     target_nickname: str = Field(..., min_length=1)
-    action: Literal["accept", "decline"] = "accept"
+    action: Literal["accept", "decline", "withdraw"] = "accept"
 
 
 class InterestResponse(BaseModel):
