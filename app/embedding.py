@@ -67,7 +67,7 @@ async def _openai_embedding(text: str) -> list[float]:
     resp = await client.post(
         "https://api.openai.com/v1/embeddings",
         headers={
-            "Authorization": f"Bearer {settings.openai_api_key}",
+            "Authorization": f"Bearer {settings.embedding_api_key}",
             "Content-Type": "application/json",
         },
         json={"model": "text-embedding-3-small", "input": text},

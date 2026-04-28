@@ -7,13 +7,12 @@ class Settings(BaseSettings):
 
     # MiniMax LLM
     minimax_api_key: str = ""
-    minimax_group_id: str = ""
     minimax_model: str = "MiniMax-Text-01"
     minimax_base_url: str = "https://api.minimax.chat/v1"
 
     # Embedding
     embedding_provider: str = "minimax"  # "minimax" or "openai"
-    openai_api_key: str = ""
+    embedding_api_key: str = ""
     embedding_model: str = "embo-01"  # MiniMax embedding model
     embedding_dim: int = 1536
 
@@ -25,6 +24,9 @@ class Settings(BaseSettings):
 
     # Auth
     auth_timestamp_tolerance_seconds: int = 300  # 5 minutes
+
+    # Dev mode: use mock LLM/embedding instead of real API
+    dev_mode: bool = False
 
     model_config = {"env_prefix": "DAZI_", "env_file": ".env"}
 
