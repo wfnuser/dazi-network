@@ -159,9 +159,9 @@ async def express_interest(
                 now, reverse["id"],
             )
             await conn.execute(
-                """INSERT INTO interests (from_did, to_did, status, created_at, matched_at)
-                   VALUES ($1, $2, 'matched', $3, $3)""",
-                did, target_did, now,
+                """INSERT INTO interests (from_did, to_did, message, status, created_at, matched_at)
+                   VALUES ($1, $2, $3, 'matched', $4, $4)""",
+                did, target_did, body.message, now,
             )
 
             contact_value = decrypt_contact(target["contact_value"])
@@ -174,9 +174,9 @@ async def express_interest(
         else:
             # Pending
             await conn.execute(
-                """INSERT INTO interests (from_did, to_did, status, created_at)
-                   VALUES ($1, $2, 'pending', $3)""",
-                did, target_did, now,
+                """INSERT INTO interests (from_did, to_did, message, status, created_at)
+                   VALUES ($1, $2, $3, 'pending', $4)""",
+                did, target_did, body.message, now,
             )
             _set_rate_headers(response, did)
             return InterestResponse(

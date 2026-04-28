@@ -43,7 +43,7 @@ async def get_connections(
         # Pending incoming: others who expressed interest in me, not yet matched
         incoming_rows = await conn.fetch(
             """
-            SELECT p.nickname, p.tags
+            SELECT p.nickname, p.tags, i.message
             FROM interests i
             JOIN profiles p ON p.did = i.from_did
             WHERE i.to_did = $1 AND i.status = 'pending'
@@ -55,7 +55,7 @@ async def get_connections(
         # Pending outgoing: I expressed interest, not yet matched
         outgoing_rows = await conn.fetch(
             """
-            SELECT p.nickname, p.tags
+            SELECT p.nickname, p.tags, i.message
             FROM interests i
             JOIN profiles p ON p.did = i.to_did
             WHERE i.from_did = $1 AND i.status = 'pending'
@@ -94,11 +94,11 @@ async def get_connections(
         return raw
 
     pending_incoming = [
-        PendingConnection(nickname=r["nickname"], tags=parse_tags(r["tags"]))
+        PendingConnection(nickname=r["nickname"], tags=parse_tags(r["tags"]), message=r["message"] or "")
         for r in incoming_rows
     ]
     pending_outgoing = [
-        PendingConnection(nickname=r["nickname"], tags=parse_tags(r["tags"]))
+        PendingConnection(nickname=r["nickname"], tags=parse_tags(r["tags"]), message=r["message"] or "")
         for r in outgoing_rows
     ]
     declined = [

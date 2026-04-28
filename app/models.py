@@ -56,6 +56,7 @@ class SearchResponse(BaseModel):
 class InterestRequest(BaseModel):
     target_nickname: str = Field(..., min_length=1)
     action: Literal["accept", "decline", "withdraw"] = "accept"
+    message: str = Field(default="", max_length=200)
 
 
 class InterestResponse(BaseModel):
@@ -69,6 +70,7 @@ class InterestResponse(BaseModel):
 class PendingConnection(BaseModel):
     nickname: str
     tags: list[str]
+    message: str = ""
 
 
 class DeclinedConnection(BaseModel):

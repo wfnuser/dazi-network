@@ -57,6 +57,7 @@ async def init_db():
                 id              SERIAL PRIMARY KEY,
                 from_did        TEXT NOT NULL REFERENCES profiles(did) ON DELETE CASCADE,
                 to_did          TEXT NOT NULL REFERENCES profiles(did) ON DELETE CASCADE,
+                message         TEXT NOT NULL DEFAULT '',
                 status          TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'matched', 'declined')),
                 created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
                 matched_at      TIMESTAMPTZ,
