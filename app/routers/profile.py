@@ -62,7 +62,7 @@ async def create_or_update_profile(
     emb_values = await compute_embedding(ai_extracted["values"])
     emb_lifestyle = await compute_embedding(ai_extracted["lifestyle"])
 
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(timezone.utc)
     tags_json = json.dumps(body.tags, ensure_ascii=False)
 
     async with pool.acquire() as conn:
@@ -131,7 +131,7 @@ async def create_or_update_profile(
         response.headers[k] = v
 
     response.status_code = status_code
-    return ProfileResponse(did=did, nickname=body.nickname, version=version, created_at=created_at)
+    return ProfileResponse(did=did, nickname=body.nickname, version=version, created_at=created_at.isoformat())
 
 
 @router.delete(

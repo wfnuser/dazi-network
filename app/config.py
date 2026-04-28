@@ -5,13 +5,13 @@ class Settings(BaseSettings):
     # Database
     database_url: str = "postgresql://postgres:postgres@localhost:5432/dazi"
 
-    # MiniMax LLM
-    minimax_api_key: str = ""
-    minimax_model: str = "MiniMax-Text-01"
-    minimax_base_url: str = "https://api.minimax.chat/v1"
+    # LLM (OpenAI-compatible chat completion API)
+    llm_api_key: str = ""
+    llm_base_url: str = "https://api.openai.com/v1"
+    llm_model: str = "gpt-4o-mini"
 
-    # Embedding
-    embedding_provider: str = "minimax"  # "minimax" or "openai"
+    # Embedding (OpenAI-compatible embedding API)
+    embedding_provider: str = "openai"  # "minimax" adds type param
     embedding_api_key: str = ""
     embedding_base_url: str = "https://api.openai.com/v1"
     embedding_model: str = "text-embedding-3-small"

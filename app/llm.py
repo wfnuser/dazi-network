@@ -13,16 +13,16 @@ async def get_http_client() -> httpx.AsyncClient:
 
 
 async def _chat_completion(system_prompt: str, user_prompt: str) -> str:
-    """Call MiniMax chat completion API."""
+    """Call OpenAI-compatible chat completion API."""
     client = await get_http_client()
     resp = await client.post(
-        f"{settings.minimax_base_url}/text/chatcompletion_v2",
+        f"{settings.llm_base_url}/chat/completions",
         headers={
-            "Authorization": f"Bearer {settings.minimax_api_key}",
+            "Authorization": f"Bearer {settings.llm_api_key}",
             "Content-Type": "application/json",
         },
         json={
-            "model": settings.minimax_model,
+            "model": settings.llm_model,
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
@@ -33,7 +33,11 @@ async def _chat_completion(system_prompt: str, user_prompt: str) -> str:
     )
     resp.raise_for_status()
     data = resp.json()
-    return data["choices"][0]["message"]["content"]
+    choices = data.get("choices")
+    if not choices:
+        error_info = data.get("base_resp", data.get("error", data))
+        raise ValueError(f"LLM returned no choices: {error_info}")
+    return choices[0]["message"]["content"]
 
 
 AI_EXTRACT_SYSTEM_PROMPT = """\
