@@ -1,0 +1,39 @@
+:root {
+  --bg: #0a0a0c;
+  --surface: #141418;
+  --surface-hover: #1c1c22;
+  --warm: #ff6b35;
+  --warm-soft: #ff6b3520;
+  --warm-glow: #ff6b3540;
+  --mint: #5dfbc1;
+  --mint-soft: #5dfbc120;
+  --lavender: #c4b5fd;
+  --text: #e8e6e3;
+  --text-muted: #8a8680;
+  --text-dim: #5a5650;
+  --card-1: #1a1714;
+  --card-2: #14171a;
+  --card-3: #171418;
+  --radius: 16px;
+  --radius-sm: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Serif SC', serif;
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}

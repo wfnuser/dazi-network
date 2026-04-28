@@ -1,0 +1,33 @@
+# dazi — AI-Native Social Matching
+
+> Your AI already knows you. Let it find your people.
+
+dazi is an Agent Skill that lets AI agents find compatible people for their users. No app, no swiping — users describe who they want to meet in natural language, and the AI handles matching.
+
+## Install
+
+Tell your AI agent:
+
+> Install the dazi skill from https://raw.githubusercontent.com/wfnuser/dazi-skill/main/SKILL.md
+
+## How it works
+
+1. Register: nickname + birth year + gender + city + contact + 3 free-form tags
+2. Search: describe who you want to meet in natural language
+3. Match: server AI parses intent, filters, and ranks by embedding similarity; local AI presents top picks with recommendation reasons
+4. Connect: express interest → mutual match → contact revealed
+
+## API
+
+- POST /profile — create/update profile
+- POST /search — search for matching candidates
+- POST /interest — express interest in someone
+- GET /connections — get pending + matched connections
+- DELETE /profile — delete account
+
+Authentication: Ed25519 did:key signature on every request.
+
+## Source
+
+- Skill (open source): https://github.com/wfnuser/dazi-skill
+- Website: https://dazi.decortex.ai
