@@ -74,7 +74,7 @@ async def create_or_update_profile(
             await conn.execute(
                 """
                 UPDATE profiles SET
-                    nickname = $2, age = $3, gender = $4, city = $5,
+                    nickname = $2, birth_year = $3, gender = $4, city = $5,
                     tags = $6, contact_type = $7, contact_value = $8,
                     ai_summary = $9, ai_personality = $10, ai_interests = $11,
                     ai_values = $12, ai_lifestyle = $13,
@@ -84,7 +84,7 @@ async def create_or_update_profile(
                     version = $19, updated_at = $20
                 WHERE did = $1
                 """,
-                did, body.nickname, body.basic.age, body.basic.gender, body.basic.city,
+                did, body.nickname, body.basic.birth_year, body.basic.gender, body.basic.city,
                 tags_json, body.contact.type, encrypted_contact,
                 ai_extracted["summary"], ai_extracted["personality"],
                 ai_extracted["interests"], ai_extracted["values"], ai_extracted["lifestyle"],
@@ -101,7 +101,7 @@ async def create_or_update_profile(
             await conn.execute(
                 """
                 INSERT INTO profiles (
-                    did, nickname, age, gender, city,
+                    did, nickname, birth_year, gender, city,
                     tags, contact_type, contact_value,
                     ai_summary, ai_personality, ai_interests, ai_values, ai_lifestyle,
                     emb_summary, emb_personality, emb_interests, emb_values, emb_lifestyle,
@@ -114,7 +114,7 @@ async def create_or_update_profile(
                     $19, $20, $20
                 )
                 """,
-                did, body.nickname, body.basic.age, body.basic.gender, body.basic.city,
+                did, body.nickname, body.basic.birth_year, body.basic.gender, body.basic.city,
                 tags_json, body.contact.type, encrypted_contact,
                 ai_extracted["summary"], ai_extracted["personality"],
                 ai_extracted["interests"], ai_extracted["values"], ai_extracted["lifestyle"],

@@ -30,7 +30,7 @@ async def init_db():
             CREATE TABLE IF NOT EXISTS profiles (
                 did             TEXT PRIMARY KEY,
                 nickname        TEXT NOT NULL UNIQUE,
-                age             INTEGER NOT NULL,
+                birth_year      INTEGER NOT NULL,
                 gender          TEXT NOT NULL CHECK (gender IN ('M', 'F', 'O')),
                 city            TEXT NOT NULL,
                 tags            JSONB NOT NULL,
@@ -77,6 +77,6 @@ async def init_db():
         # Indexes for search performance
         await conn.execute("CREATE INDEX IF NOT EXISTS idx_profiles_city ON profiles (city)")
         await conn.execute("CREATE INDEX IF NOT EXISTS idx_profiles_gender ON profiles (gender)")
-        await conn.execute("CREATE INDEX IF NOT EXISTS idx_profiles_age ON profiles (age)")
+        await conn.execute("CREATE INDEX IF NOT EXISTS idx_profiles_birth_year ON profiles (birth_year)")
         await conn.execute("CREATE INDEX IF NOT EXISTS idx_interests_to_did ON interests (to_did)")
         await conn.execute("CREATE INDEX IF NOT EXISTS idx_interests_from_did ON interests (from_did)")

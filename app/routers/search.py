@@ -80,14 +80,14 @@ async def search_candidates(
             params.append(filters["gender"])
             param_idx += 1
 
-        if "age_min" in filters:
-            where_clauses.append(f"age >= ${param_idx}")
-            params.append(int(filters["age_min"]))
+        if "birth_year_min" in filters:
+            where_clauses.append(f"birth_year >= ${param_idx}")
+            params.append(int(filters["birth_year_min"]))
             param_idx += 1
 
-        if "age_max" in filters:
-            where_clauses.append(f"age <= ${param_idx}")
-            params.append(int(filters["age_max"]))
+        if "birth_year_max" in filters:
+            where_clauses.append(f"birth_year <= ${param_idx}")
+            params.append(int(filters["birth_year_max"]))
             param_idx += 1
 
         where_sql = " AND ".join(where_clauses)

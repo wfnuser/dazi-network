@@ -76,8 +76,8 @@ INTENT_PARSE_SYSTEM_PROMPT = """\
 {
   "filters": {
     "city": "城市名（如有）或null",
-    "age_min": 数字或null,
-    "age_max": 数字或null,
+    "birth_year_min": 出生年份数字或null,
+    "birth_year_max": 出生年份数字或null,
     "gender": "M/F/O（如有）或null"
   },
   "dimensions": ["要使用的embedding维度列表"],

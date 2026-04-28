@@ -6,7 +6,7 @@ from typing import Literal
 # --- Profile ---
 
 class BasicInfo(BaseModel):
-    age: int = Field(..., ge=18, le=99)
+    birth_year: int = Field(..., ge=1920, le=2010)
     gender: Literal["M", "F", "O"]
     city: str = Field(..., min_length=1, max_length=50)
 
