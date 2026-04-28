@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, Response
 from app.auth import require_did_auth
 from app.db import get_pool
 from app.models import (
-    ConnectionsResponse, PendingConnection, MatchedConnection,
-    ContactInfo, ErrorResponse,
+    ConnectionsResponse, PendingConnection, DeclinedConnection,
+    MatchedConnection, ContactInfo, ErrorResponse,
 )
 from app.crypto import decrypt_contact
 from app.rate_limit import rate_limiter, RateLimitExceeded, RATE_LIMITS
@@ -64,6 +64,18 @@ async def get_connections(
             did,
         )
 
+        # Declined: my outgoing interests that were declined
+        declined_rows = await conn.fetch(
+            """
+            SELECT p.nickname, p.tags
+            FROM interests i
+            JOIN profiles p ON p.did = i.to_did
+            WHERE i.from_did = $1 AND i.status = 'declined'
+            ORDER BY i.created_at DESC
+            """,
+            did,
+        )
+
         # Matched: mutual matches (I have a matched interest record)
         matched_rows = await conn.fetch(
             """
@@ -88,6 +100,10 @@ async def get_connections(
     pending_outgoing = [
         PendingConnection(nickname=r["nickname"], tags=parse_tags(r["tags"]))
         for r in outgoing_rows
+    ]
+    declined = [
+        DeclinedConnection(nickname=r["nickname"], tags=parse_tags(r["tags"]))
+        for r in declined_rows
     ]
     matched = [
         MatchedConnection(
@@ -115,5 +131,6 @@ async def get_connections(
     return ConnectionsResponse(
         pending_incoming=pending_incoming,
         pending_outgoing=pending_outgoing,
+        declined=declined,
         matched=matched,
     )

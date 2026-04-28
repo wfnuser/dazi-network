@@ -55,10 +55,11 @@ class SearchResponse(BaseModel):
 
 class InterestRequest(BaseModel):
     target_nickname: str = Field(..., min_length=1)
+    action: Literal["accept", "decline"] = "accept"
 
 
 class InterestResponse(BaseModel):
-    status: Literal["pending", "matched"]
+    status: Literal["pending", "matched", "declined"]
     contact: ContactInfo | None = None
     message: str
 
@@ -66,6 +67,11 @@ class InterestResponse(BaseModel):
 # --- Connections ---
 
 class PendingConnection(BaseModel):
+    nickname: str
+    tags: list[str]
+
+
+class DeclinedConnection(BaseModel):
     nickname: str
     tags: list[str]
 
@@ -80,6 +86,7 @@ class MatchedConnection(BaseModel):
 class ConnectionsResponse(BaseModel):
     pending_incoming: list[PendingConnection]
     pending_outgoing: list[PendingConnection]
+    declined: list[DeclinedConnection]
     matched: list[MatchedConnection]
 
 

@@ -10,6 +10,14 @@ from app.rate_limit import rate_limiter, RateLimitExceeded, RATE_LIMITS
 router = APIRouter(tags=["interest"])
 
 
+def _set_rate_headers(response: Response, did: str):
+    config = RATE_LIMITS["interest"]
+    info = rate_limiter.get_info(did, "interest", **config)
+    response.headers["X-RateLimit-Limit"] = str(info["limit"])
+    response.headers["X-RateLimit-Remaining"] = str(info["remaining"])
+    response.headers["X-RateLimit-Reset"] = info["reset"]
+
+
 @router.post(
     "/interest",
     response_model=InterestResponse,
@@ -62,7 +70,7 @@ async def express_interest(
 
         target_did = target["did"]
 
-        # Cannot interest self
+        # Cannot target self
         if target_did == did:
             raise HTTPException(
                 status_code=400,
@@ -72,7 +80,34 @@ async def express_interest(
                 },
             )
 
-        # Check for duplicate
+        # === DECLINE ===
+        if body.action == "decline":
+            # Find incoming interest from target to me
+            incoming = await conn.fetchrow(
+                "SELECT id, status FROM interests WHERE from_did = $1 AND to_did = $2 AND status = 'pending'",
+                target_did, did,
+            )
+            if not incoming:
+                raise HTTPException(
+                    status_code=404,
+                    detail={
+                        "error": "not_found",
+                        "message": f"No pending interest from '{body.target_nickname}' to decline",
+                    },
+                )
+            await conn.execute(
+                "UPDATE interests SET status = 'declined' WHERE id = $1",
+                incoming["id"],
+            )
+            _set_rate_headers(response, did)
+            return InterestResponse(
+                status="declined",
+                contact=None,
+                message=f"Declined interest from '{body.target_nickname}'.",
+            )
+
+        # === ACCEPT (default) ===
+        # Check for duplicate outgoing
         existing = await conn.fetchrow(
             "SELECT id FROM interests WHERE from_did = $1 AND to_did = $2",
             did, target_did,
@@ -106,16 +141,8 @@ async def express_interest(
                 did, target_did, now,
             )
 
-            # Decrypt target's contact
             contact_value = decrypt_contact(target["contact_value"])
-
-            # Set rate limit headers
-            config = RATE_LIMITS["interest"]
-            info = rate_limiter.get_info(did, "interest", **config)
-            response.headers["X-RateLimit-Limit"] = str(info["limit"])
-            response.headers["X-RateLimit-Remaining"] = str(info["remaining"])
-            response.headers["X-RateLimit-Reset"] = info["reset"]
-
+            _set_rate_headers(response, did)
             return InterestResponse(
                 status="matched",
                 contact=ContactInfo(type=target["contact_type"], value=contact_value),
@@ -128,13 +155,7 @@ async def express_interest(
                    VALUES ($1, $2, 'pending', $3)""",
                 did, target_did, now,
             )
-
-            config = RATE_LIMITS["interest"]
-            info = rate_limiter.get_info(did, "interest", **config)
-            response.headers["X-RateLimit-Limit"] = str(info["limit"])
-            response.headers["X-RateLimit-Remaining"] = str(info["remaining"])
-            response.headers["X-RateLimit-Reset"] = info["reset"]
-
+            _set_rate_headers(response, did)
             return InterestResponse(
                 status="pending",
                 contact=None,
