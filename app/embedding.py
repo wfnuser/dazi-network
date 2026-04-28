@@ -11,67 +11,34 @@ async def get_http_client() -> httpx.AsyncClient:
     return _http_client
 
 
-async def compute_embedding(text: str) -> list[float]:
-    """Compute embedding for a text string."""
-    if settings.embedding_provider == "openai":
-        return await _openai_embedding(text)
-    return await _minimax_embedding(text)
-
-
-async def _minimax_embedding(text: str) -> list[float]:
-    """Call MiniMax embedding API."""
+async def _call_embedding_api(text: str | list[str], **extra) -> list[float]:
+    """Call embedding API. Works with OpenAI-compatible endpoints (OpenAI, MiniMax, etc.)."""
     client = await get_http_client()
+    api_key = settings.embedding_api_key or settings.minimax_api_key
     resp = await client.post(
-        f"{settings.minimax_base_url}/embeddings",
+        f"{settings.embedding_base_url}/embeddings",
         headers={
-            "Authorization": f"Bearer {settings.minimax_api_key}",
+            "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
         },
         json={
             "model": settings.embedding_model,
-            "input": [text],
-            "type": "db",  # "db" for stored docs, "query" for search queries
+            "input": text if isinstance(text, list) else [text],
+            **extra,
         },
     )
     resp.raise_for_status()
     data = resp.json()
     return data["data"][0]["embedding"]
+
+
+async def compute_embedding(text: str) -> list[float]:
+    """Compute embedding for storing (document side)."""
+    extra = {"type": "db"} if settings.embedding_provider == "minimax" else {}
+    return await _call_embedding_api(text, **extra)
 
 
 async def compute_query_embedding(text: str) -> list[float]:
-    """Compute embedding for a search query (may use different type hint)."""
-    if settings.embedding_provider == "openai":
-        return await _openai_embedding(text)
-    # MiniMax distinguishes "query" vs "db" type
-    client = await get_http_client()
-    resp = await client.post(
-        f"{settings.minimax_base_url}/embeddings",
-        headers={
-            "Authorization": f"Bearer {settings.minimax_api_key}",
-            "Content-Type": "application/json",
-        },
-        json={
-            "model": settings.embedding_model,
-            "input": [text],
-            "type": "query",
-        },
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    return data["data"][0]["embedding"]
-
-
-async def _openai_embedding(text: str) -> list[float]:
-    """Fallback: OpenAI text-embedding-3-small."""
-    client = await get_http_client()
-    resp = await client.post(
-        "https://api.openai.com/v1/embeddings",
-        headers={
-            "Authorization": f"Bearer {settings.embedding_api_key}",
-            "Content-Type": "application/json",
-        },
-        json={"model": "text-embedding-3-small", "input": text},
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    return data["data"][0]["embedding"]
+    """Compute embedding for search query."""
+    extra = {"type": "query"} if settings.embedding_provider == "minimax" else {}
+    return await _call_embedding_api(text, **extra)

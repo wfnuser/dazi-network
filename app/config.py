@@ -13,7 +13,8 @@ class Settings(BaseSettings):
     # Embedding
     embedding_provider: str = "minimax"  # "minimax" or "openai"
     embedding_api_key: str = ""
-    embedding_model: str = "embo-01"  # MiniMax embedding model
+    embedding_base_url: str = "https://api.openai.com/v1"
+    embedding_model: str = "text-embedding-3-small"
     embedding_dim: int = 1536
 
     # Crypto
