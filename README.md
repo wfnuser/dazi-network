@@ -7,6 +7,7 @@ Matching engine backend for the dazi social platform. AI-native social matching 
 - Python 3.12+, FastAPI
 - Postgres + pgvector (vector similarity search)
 - MiniMax LLM (intent parsing + profile analysis)
+- Configurable embedding API (OpenAI, MiniMax, or any compatible endpoint)
 - Ed25519 did:key authentication
 - Railway deployment
 
@@ -61,7 +62,7 @@ Client (dazi-skill) -> POST /search { intent: "找搭子" }
                          |
                     Server LLM parses intent -> filters + embedding dimensions
                          |
-                    Hard filter (city, age, gender)
+                    Hard filter (city, birth_year, gender)
                          |
                     pgvector cosine similarity on selected dimensions
                          |

@@ -26,9 +26,6 @@ class Settings(BaseSettings):
     # Auth
     auth_timestamp_tolerance_seconds: int = 300  # 5 minutes
 
-    # Dev mode: use mock LLM/embedding instead of real API
-    dev_mode: bool = False
-
     model_config = {"env_prefix": "DAZI_", "env_file": ".env"}
 
 
