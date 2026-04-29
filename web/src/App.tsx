@@ -45,7 +45,7 @@ function Hero() {
       </div>
       <div className="hero-content">
         <h1 className="logo">搭子</h1>
-        <p className="logo-sub">dazi &mdash; ai-native social matching</p>
+        <p className="logo-sub"><span className="logo-dazi">DAZI</span>.<span className="logo-network">Network</span> &mdash; ai-native social matching</p>
         <p className="tagline">
           别滑了<br />
           让懂你的 AI 帮你找<em>对的人</em>

@@ -42,11 +42,20 @@
 
 .logo-sub {
   font-family: 'Space Mono', monospace;
-  font-size: 0.85rem;
+  font-size: 1.1rem;
   color: var(--text-muted);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
+  letter-spacing: 0.15em;
   margin-bottom: 3rem;
+}
+
+.logo-dazi {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.logo-network {
+  color: var(--text-muted);
+  font-weight: 400;
 }
 
 .tagline {
