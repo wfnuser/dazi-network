@@ -47,10 +47,10 @@ function Hero() {
         <h1 className="logo">搭子</h1>
         <p className="logo-sub"><span className="logo-dazi">DAZI</span>.<span className="logo-network">Network</span> &mdash; ai-native social matching</p>
         <p className="tagline">
-          别滑了<br />
-          让懂你的 AI 帮你找<em>对的人</em>
+          别滑了，你的 AI 已经很了解你<br />
+          让它帮你找<em>对的人</em>
         </p>
-        <p className="tagline-en">Stop swiping. Let your AI find your people.</p>
+        <p className="tagline-en">Stop swiping. Your AI already knows you. Let it find your people.</p>
         <div className="cta-group">
           <a href="#install" className="cta cta-primary">Install Skill</a>
           <a href="#how" className="cta cta-secondary">How it works</a>
